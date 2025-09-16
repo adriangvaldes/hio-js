@@ -18,7 +18,7 @@ export const useChat = () => {
     useState<ConnectionStatus>("closed");
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080");
+    const socket = new WebSocket(WEBSOCKET_URL);
 
     socketRef.current = socket;
     setConnectionStatus("connecting");
@@ -52,11 +52,10 @@ export const useChat = () => {
 
   const sendMessage = (text: string) => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      // Here you would structure your message object
       const messageToSend: ChatMessage = {
         id: `msg_${Date.now()}`,
         text,
-        sender: "user", // or 'agent'
+        sender: "user",
         timestamp: Date.now(),
       };
       socketRef.current.send(JSON.stringify(messageToSend));
