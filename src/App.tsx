@@ -1,5 +1,3 @@
-import { SendHorizonal } from "lucide-react";
-import { useChat } from "./hooks/useChat";
 import { SendMessageInput } from "./components/SendMessageInput";
 import { ListMessages } from "./components/ListMessages";
 
