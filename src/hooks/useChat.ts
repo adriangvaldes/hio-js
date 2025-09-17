@@ -18,7 +18,7 @@ export const useChat = () => {
     useState<ConnectionStatus>("closed");
 
   useEffect(() => {
-    const socket = new WebSocket(WEBSOCKET_URL);
+    const socket = new WebSocket(`${WEBSOCKET_URL}?roomId=1234`);
 
     socketRef.current = socket;
     setConnectionStatus("connecting");

@@ -14,6 +14,13 @@ export function SendMessageInput() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <section className="relative">
       <input
@@ -22,6 +29,7 @@ export function SendMessageInput() {
         value={message}
         className="w-full pr-15 bg-white border border-gray-200 p-2 focus:outline-none focus:ring-1 focus:ring-violet-500"
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <p className="text-gray-200 absolute bottom-1/5 right-5 ">
         <SendHorizonal onClick={handleSendMessage} />
