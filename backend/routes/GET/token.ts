@@ -1,11 +1,21 @@
-import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
+import jwt from "jsonwebtoken";
 
-const app = express();
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_TOKEN;
+
 // Use CORS middleware to allow requests from your frontend
-app.use(cors());
 
-app.post("/token", (req, res) => {
-  res.status(501).json({ message: "Not implemented yet." });
-});
+export const getToken = async (req, res) => {
+  const requestBody = req.body;
+
+  const payload = requestBody;
+
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "10h" });
+
+  res.status(200).json({
+    token: token,
+    expiresIn: 10 * 60 * 60, // 10 hours in seconds
+  });
+};

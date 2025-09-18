@@ -2,7 +2,7 @@ import { app, JWT_SECRET, rooms } from "../..";
 import { UserPayload } from "../../types";
 import jwt from "jsonwebtoken";
 
-app.get("/rooms", (req, res) => {
+export const getRooms = async (req, res) => {
   try {
     const authHeader = req.headers["authorization"];
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -28,4 +28,4 @@ app.get("/rooms", (req, res) => {
   } catch (error) {
     res.status(401).json({ message: "Authentication failed.", error: (error as Error).message });
   }
-});
+};

@@ -6,6 +6,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { ChatWebSocket, UserPayload } from "./types";
+import { createApiRouter } from "./routes/api";
 
 dotenv.config();
 
@@ -17,9 +18,13 @@ const agents = new Set<ChatWebSocket>();
 export const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 const server = createServer(app);
 const wss = new WebSocketServer({ noServer: true });
+
+const apiRouter = createApiRouter(); // Create an instance of the router
+app.use("/api", apiRouter);
 
 server.on("upgrade", (request: IncomingMessage, socket, head) => {
   wss.handleUpgrade(request, socket, head, (ws) => {
