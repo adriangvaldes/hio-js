@@ -1,7 +1,9 @@
-import { useChat } from "../hooks/useChat";
+import { useChat } from '../hooks/useChat';
 
 export function ListMessages() {
-  const { messages } = useChat();
+  const { messages, connectionStatus } = useChat();
+
+  console.log('Connection status:', connectionStatus);
 
   return (
     <section className="h-96 bg-gray-100 flex relative px-10 flex-col gap-2 justify-end pb-2">
@@ -15,7 +17,7 @@ export function ListMessages() {
         messages.map((msg, index) => (
           <div
             key={index}
-            className={`px-4 py-3 rounded-3xl ${msg.sender === "user" ? "bg-lime-200 w-fit self-end" : "bg-slate-300 w-fit self-start"}`}
+            className={`px-4 py-3 rounded-3xl ${msg.sender === 'user' ? 'bg-lime-200 w-fit self-end' : 'bg-slate-300 w-fit self-start'}`}
           >
             {msg.text}
           </div>

@@ -7,10 +7,10 @@ const apiClient = axios.create({
   baseURL: API_BASE_URL,
 });
 
-export const getAuthToken = async (): Promise<TokenResponse> => {
+export const getAuthToken = async (userId: string): Promise<TokenResponse> => {
   const response = await apiClient.post('/token', {
     role: 'customer',
-    userId: `customer_${Date.now()}`,
+    userId,
     name: 'Anonimous',
   });
   return response.data;

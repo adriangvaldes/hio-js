@@ -50,7 +50,7 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
       const roomId = userId;
       if (!rooms.has(roomId)) rooms.set(roomId, new Set());
       rooms.get(roomId)!.add(ws);
-      console.log(`Customer ${userId} connected to room.`);
+      console.log(`Customer ${userId} connected to room: ${roomId}`);
     } else {
       throw new Error("Invalid token payload.");
     }
@@ -61,6 +61,8 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
   }
 
   wss.on("message", function message(data) {
+    console.log("HERE");
+
     const messageData = JSON.parse(data.toString());
     const sender = ws.user;
 
@@ -72,6 +74,7 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
         const messageForAgent = { ...messageData, roomId };
         agent.send(JSON.stringify(messageForAgent));
       });
+      console.log(roomId, room);
     }
 
     if (sender.role === "agent") {
