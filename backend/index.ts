@@ -10,7 +10,10 @@ import { createApiRouter } from "./routes/api";
 
 dotenv.config();
 
-export const JWT_SECRET = process.env.JWT_TOKEN;
+export const JWT_TOKEN = process.env.JWT_TOKEN;
+if (!JWT_TOKEN) {
+  throw new Error("JWT_TOKEN must be defined in your .env file");
+}
 
 export const rooms = new Map<string, Set<ChatWebSocket>>();
 const agents = new Set<ChatWebSocket>();
@@ -23,7 +26,8 @@ app.use(express.json());
 const server = createServer(app);
 const wss = new WebSocketServer({ noServer: true });
 
-const apiRouter = createApiRouter(); // Create an instance of the router
+// Pass the 'rooms' map to the router factory
+const apiRouter = createApiRouter(rooms);
 app.use("/api", apiRouter);
 
 server.on("upgrade", (request: IncomingMessage, socket, head) => {
@@ -38,7 +42,7 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
     const token = url.searchParams.get("token");
     if (!token) throw new Error("No token provided.");
 
-    const payload = jwt.verify(token, JWT_SECRET) as UserPayload;
+    const payload = jwt.verify(token, JWT_TOKEN) as UserPayload;
     ws.user = payload;
 
     const { role, userId } = payload;
@@ -60,8 +64,12 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
     return;
   }
 
-  wss.on("message", function message(data) {
-    console.log("HERE");
+  // --- CORRECTED SECTION ---
+  // Event listeners should be attached to the specific client connection (ws),
+  // not the entire server (wss).
+
+  ws.on("message", function message(data) {
+    console.log("HERE"); // This will now appear correctly!
 
     const messageData = JSON.parse(data.toString());
     const sender = ws.user;
@@ -74,7 +82,6 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
         const messageForAgent = { ...messageData, roomId };
         agent.send(JSON.stringify(messageForAgent));
       });
-      console.log(roomId, room);
     }
 
     if (sender.role === "agent") {
@@ -84,7 +91,10 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
     }
   });
 
-  wss.on("close", () => {
+  ws.on("close", () => {
+    // Check if ws.user exists before destructuring
+    if (!ws.user) return;
+
     const { role, userId } = ws.user;
     if (role === "agent") {
       agents.delete(ws);
@@ -100,10 +110,9 @@ wss.on("connection", function connection(ws: ChatWebSocket, req) {
     }
   });
 
-  wss.on("error", console.error);
+  ws.on("error", console.error);
 });
 
-// --- 5. Start the server ---
 server.listen(8080, () => {
   console.log("Hybrid server (Express API + WebSocket) is running on port 8080");
 });

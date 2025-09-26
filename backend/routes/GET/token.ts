@@ -5,8 +5,6 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_TOKEN;
 
-// Use CORS middleware to allow requests from your frontend
-
 export const getToken = async (req, res) => {
   const requestBody = req.body;
 

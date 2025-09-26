@@ -61,9 +61,9 @@ export const useChat = () => {
         sender: 'user',
         timestamp: Date.now(),
       };
-      console.log('Sending message:', messageToSend);
 
       socketRef.current.send(JSON.stringify(messageToSend));
+      console.log('Sendeed message', messageToSend);
     } else {
       console.error('Cannot send message, WebSocket is not open.');
     }
