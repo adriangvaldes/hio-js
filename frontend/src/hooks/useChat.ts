@@ -14,7 +14,14 @@ type ConnectionStatus = 'connecting' | 'open' | 'closed';
 
 export const useChat = () => {
   const socketRef = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: '0',
+      text: 'Hola, como podemos te ajudar hoje?',
+      sender: 'agent',
+      timestamp: 0,
+    },
+  ]);
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('closed');
   const [roomId, setRoomId] = useState<string | null>(null);
   const { bearerToken, userId } = useApi();

@@ -6,7 +6,7 @@ export function ListMessages() {
   console.log('Connection status:', connectionStatus);
 
   return (
-    <section className="h-96 bg-gray-100 flex relative px-10 flex-col gap-2 justify-end pb-2">
+    <section className="max-h-96 bg-gray-100 flex relative px-10 flex-col gap-2 justify-end pb-2">
       {messages.length === 0 && (
         <p className="text-gray-400 top-1/2 absolute left-1/2 -translate-x-1/2">
           No messages yet...
