@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { UserPayload, ChatWebSocket } from "../../types";
+import dotenv from "dotenv";
 
-const JWT_SECRET = process.env.JWT_SECRET!;
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_TOKEN;
 
 // This is a "higher-order function". It's a function that returns another function.
 // This allows us to pass the 'rooms' map from our main server file.
@@ -31,6 +34,7 @@ export const getRooms = (rooms: Map<string, Set<ChatWebSocket>>) => {
 
       res.status(200).json(activeRooms);
     } catch (error) {
+      console.error(error);
       res.status(401).json({ message: "Authentication failed.", error: (error as Error).message });
     }
   };
