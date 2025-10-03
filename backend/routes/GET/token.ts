@@ -14,6 +14,6 @@ export const getToken = async (req, res) => {
 
   res.status(200).json({
     token: token,
-    expiresIn: 10 * 60 * 60, // 10 hours in seconds
+    expiresIn: 100 * 24 * 60 * 60, // 100 days in seconds
   });
 };
